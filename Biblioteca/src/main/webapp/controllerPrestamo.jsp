@@ -1,3 +1,4 @@
+<%-- Este controlador recibe los datos del préstamo y los manda al Bean para guardarlos --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 

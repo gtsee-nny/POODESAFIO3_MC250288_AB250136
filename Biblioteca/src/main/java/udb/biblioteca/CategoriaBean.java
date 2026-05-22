@@ -33,13 +33,14 @@ public class CategoriaBean {
 
     //  Métodos de lógica de negocio
 
-    /**
-     * Retorna todas las categorías almacenadas en la base de datos.
-     *
-     * @param conn Conexión JDBC activa (obtenida desde conexion.jsp)
-     * @return Lista de objetos CategoriaBean
-     * @throws SQLException si ocurre un error al consultar la base de datos
+    /*
+      Retorna todas las categorías almacenadas en la base de datos.
+      @param conn Conexión JDBC activa (obtenida desde conexion.jsp)
+      @return Lista de objetos CategoriaBean
+      @throws SQLException si ocurre un error al consultar la base de datos
      */
+
+    // Este metodoo obtiene todas las categorías de la BD y las manda a donde se necesiten mostrar
     public List<CategoriaBean> getListaCategorias(Connection conn) throws SQLException {
         List<CategoriaBean> lista = new ArrayList<>();
 
@@ -58,12 +59,13 @@ public class CategoriaBean {
         return lista;
     }
 
-    /**
-     * Inserta una nueva categoría en la base de datos.
-     *
-     * @param conn Conexión JDBC activa
-     * @throws SQLException si ocurre un error al insertar
+    /*
+     Inserta una nueva categoría en la base de datos.
+     @param conn Conexión JDBC activa
+     @throws SQLException si ocurre un error al insertar
      */
+
+    // Este metodoo inserta una nueva categoría en la base de datos
     public void insertar(Connection conn) throws SQLException {
         String sql = "INSERT INTO categorias (nombre_categoria) VALUES (?)";
 

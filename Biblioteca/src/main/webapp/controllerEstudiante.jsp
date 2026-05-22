@@ -1,3 +1,4 @@
+<%-- Controlador que procesa el registro de estudiantes --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 

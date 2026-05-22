@@ -27,9 +27,10 @@
 
     <%-- Mostrar error si viene redirigido --%>
     <% if (request.getParameter("error") != null) { %>
-        <div class="alert alert-danger"><%= request.getParameter("error") %></div>
+    <div class="alert alert-danger"><%= request.getParameter("error") %></div>
     <% } %>
 
+    <!-- Formulario para registrar estudiantes -->
     <form action="controllerEstudiante.jsp" method="POST">
         <div class="mb-3">
             <label class="form-label">Carnet</label>

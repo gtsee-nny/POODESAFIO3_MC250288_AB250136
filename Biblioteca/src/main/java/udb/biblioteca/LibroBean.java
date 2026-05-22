@@ -4,14 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * JavaBean que representa la entidad Libro.
- * Corresponde a la tabla 'libros' en la base de datos bibliotecaudb.
- * Incluye un objeto CategoriaBean para representar la relación FK con categorias.
- */
 public class LibroBean {
 
-    // ── Atributos privados ──────────────────────────────────────────────────
     private int          idLibro;
     private String       titulo;
     private String       autor;
@@ -77,11 +71,10 @@ public class LibroBean {
 
     // Métodos de lógica de negocio
 
-    /**
-     * Retorna el nombre de la categoría asociada al libro.
-     * Útil para mostrarlo directamente en las vistas JSP.
-     *
-     * @return nombre de la categoría o cadena vacía si no hay categoría asignada
+    /*
+      Retorna el nombre de la categoría asociada al libro.
+      Útil para mostrarlo directamente en las vistas JSP.
+      @return nombre de la categoría o cadena vacía si no hay categoría asignada
      */
     public String getNombreCategoria() {
         if (categoria != null) {
@@ -90,14 +83,15 @@ public class LibroBean {
         return "";
     }
 
-    /**
-     * Retorna todos los libros almacenados en la base de datos,
-     * incluyendo el nombre de su categoría mediante un JOIN.
-     *
-     * @param conn Conexión JDBC activa
-     * @return Lista de objetos LibroBean
-     * @throws SQLException si ocurre un error al consultar la base de datos
+    /*
+      Retorna todos los libros almacenados en la base de datos,
+      incluyendo el nombre de su categoría mediante un JOIN.
+      @param conn Conexión JDBC activa
+      @return Lista de objetos LibroBean
+      @throws SQLException si ocurre un error al consultar la base de datos
      */
+
+    // Obtiene todos los libros guardados para mostrarlos en la página
     public List<LibroBean> getListaLibros(Connection conn) throws SQLException {
         List<LibroBean> lista = new ArrayList<>();
 
@@ -132,12 +126,13 @@ public class LibroBean {
         return lista;
     }
 
-    /**
-     * Inserta un nuevo libro en la base de datos.
-     *
-     * @param conn Conexión JDBC activa
-     * @throws SQLException si ocurre un error al insertar
+    /*
+      Inserta un nuevo libro en la base de datos.
+      @param conn Conexión JDBC activa
+      @throws SQLException si ocurre un error al insertar
      */
+
+    // Inserta un libro nuevo en la base de datos
     public void insertar(Connection conn) throws SQLException {
         String sql = "INSERT INTO libros (titulo, autor, isbn, id_categoria, cantidad_disponible) " +
                 "VALUES (?, ?, ?, ?, ?)";

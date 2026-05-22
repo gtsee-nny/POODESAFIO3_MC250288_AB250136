@@ -1,3 +1,4 @@
+<%-- Controlador encargado de recibir datos del formulario de libros y guardarlos --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 

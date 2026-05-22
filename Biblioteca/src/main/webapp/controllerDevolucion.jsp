@@ -1,3 +1,4 @@
+<%-- Aquí se procesa la devolución de libros prestados --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 <%@ page import="udb.biblioteca.PrestamoBean" %>

@@ -24,6 +24,7 @@
     </div>
 </nav>
 
+<!-- Formulario que envía los datos del libro hacia controllerLibro.jsp -->
 <div class="container mt-4">
     <h3>Registrar Libro</h3>
     <hr>

@@ -31,9 +31,10 @@
 
     <%-- Mostrar error si el libro no tiene disponibilidad --%>
     <% if (request.getParameter("error") != null) { %>
-        <div class="alert alert-danger"><%= request.getParameter("error") %></div>
+    <div class="alert alert-danger"><%= request.getParameter("error") %></div>
     <% } %>
 
+    <!-- Formulario que manda la información del préstamo al controlador -->
     <form action="controllerPrestamo.jsp" method="POST">
 
         <%-- Select dinámico de estudiantes --%>
@@ -46,9 +47,9 @@
                     List<EstudianteBean> estudiantes = estBean.getListaEstudiantes(conn);
                     for (EstudianteBean e : estudiantes) {
                 %>
-                    <option value="<%= e.getIdEstudiante() %>">
-                        <%= e.getCarnet() %> - <%= e.getNombreEstudiante() %>
-                    </option>
+                <option value="<%= e.getIdEstudiante() %>">
+                    <%= e.getCarnet() %> - <%= e.getNombreEstudiante() %>
+                </option>
                 <%
                     }
                 %>
@@ -65,11 +66,11 @@
                     List<LibroBean> libros = libBean.getListaLibros(conn);
                     for (LibroBean l : libros) {
                 %>
-                    <option value="<%= l.getIdLibro() %>"
+                <option value="<%= l.getIdLibro() %>"
                         <%= l.getCantidadDisponible() == 0 ? "disabled" : "" %>>
-                        <%= l.getTitulo() %> - <%= l.getAutor() %>
-                        (<%= l.getCantidadDisponible() %> disponibles)
-                    </option>
+                    <%= l.getTitulo() %> - <%= l.getAutor() %>
+                    (<%= l.getCantidadDisponible() %> disponibles)
+                </option>
                 <%
                     }
                 %>

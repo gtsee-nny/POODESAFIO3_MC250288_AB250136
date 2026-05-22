@@ -1,3 +1,4 @@
+<%-- Esta página crea la conexión con la base de datos para que los demás JSP la puedan usar --%>
 <%@ page import="java.sql.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%

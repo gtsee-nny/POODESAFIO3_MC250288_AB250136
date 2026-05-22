@@ -5,11 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * JavaBean que representa la entidad Prestamo.
- * Corresponde a la tabla 'prestamoss' en la base de datos bibliotecaudb.
- * Incluye objetos LibroBean y EstudianteBean para representar las relaciones FK.
- */
+
 public class PrestamoBean {
 
     private int            idPrestamo;
@@ -88,14 +84,13 @@ public class PrestamoBean {
 
     //Métodos de lógica de negocio
 
-    /**
-     * Determina si el préstamo está vigente o vencido comparando la fecha
-     * de devolución con la fecha actual del sistema.
-     * Solo aplica a préstamos con estado 'Activo'.
-     *
-     * @return "Devuelto" si el préstamo fue devuelto,
-     *         "Vigente"  si la fecha de devolución es hoy o futura,
-     *         "Vencido"  si la fecha de devolución ya pasó y aún no fue devuelto.
+    /*
+      Determina si el préstamo está vigente o vencido comparando la fecha
+      de devolución con la fecha actual del sistema.
+      Solo aplica a préstamos con estado 'Activo'.
+      @return "Devuelto" si el préstamo fue devuelto,
+              "Vigente"  si la fecha de devolución es hoy o futura,
+              "Vencido"  si la fecha de devolución ya pasó y aún no fue devuelto.
      */
     public String getEstadoPrestamo() {
         if ("Devuelto".equalsIgnoreCase(this.estado)) {
@@ -111,19 +106,20 @@ public class PrestamoBean {
         return devolucion.isBefore(hoy) ? "Vencido" : "Vigente";
     }
 
-    /**
-     * Registra un nuevo préstamo en la base de datos.
-     * Antes de insertar verifica que el libro tenga unidades disponibles;
-     * si no las tiene lanza una excepción para evitar el préstamo.
-     * Al insertar, descuenta una unidad del stock del libro.
-     *
-     * @param conn Conexión JDBC activa
-     * @throws SQLException   si ocurre un error de base de datos
-     * @throws Exception      si el libro no tiene unidades disponibles
+    /*
+      Registra un nuevo préstamo en la base de datos.
+      Antes de insertar verifica que el libro tenga unidades disponibles;
+      si no las tiene lanza una excepción para evitar el préstamo.
+      Al insertar, descuenta una unidad del stock del libro.
+      @param conn Conexión JDBC activa
+      @throws SQLException   si ocurre un error de base de datos
+      @throws Exception      si el libro no tiene unidades disponibles
      */
+
+    // Este metodoo guarda un nuevo préstamo y lo manda a la tabla prestamos
     public void insertar(Connection conn) throws Exception {
 
-        // ── 1. Verificar disponibilidad del libro ───────────────────────────
+        // 1. Verificar disponibilidad del libro
         String sqlStock = "SELECT cantidad_disponible FROM libros WHERE id_libro = ?";
         int disponible = 0;
 
@@ -140,7 +136,7 @@ public class PrestamoBean {
             throw new Exception("No hay unidades disponibles del libro seleccionado.");
         }
 
-        // ── 2. Insertar el préstamo ─────────────────────────────────────────
+        // 2. Insertar el préstamo
         String sqlInsert = "INSERT INTO prestamos " +
                 "(id_estudiante, id_libro, fecha_prestamo, fecha_devolucion, estado) " +
                 "VALUES (?, ?, ?, ?, ?)";
@@ -154,7 +150,7 @@ public class PrestamoBean {
             ps.executeUpdate();
         }
 
-        // ── 3. Descontar una unidad del stock del libro ─────────────────────
+        // 3. Descontar una unidad del stock del libro
         String sqlUpdate = "UPDATE libros SET cantidad_disponible = cantidad_disponible - 1 " +
                 "WHERE id_libro = ?";
 
@@ -164,17 +160,16 @@ public class PrestamoBean {
         }
     }
 
-    /**
-     * Marca un préstamo como 'Devuelto' e incrementa el stock del libro.
-     *
-     * @param conn       Conexión JDBC activa
-     * @param idPrestamo ID del préstamo a devolver
-     * @param idLibro    ID del libro asociado al préstamo
-     * @throws SQLException si ocurre un error de base de datos
+    /*
+     Marca un préstamo como 'Devuelto' e incrementa el stock del libro.
+     @param conn       Conexión JDBC activa
+     @param idPrestamo ID del préstamo a devolver
+     @param idLibro    ID del libro asociado al préstamo
+     @throws SQLException si ocurre un error de base de datos
      */
     public void devolver(Connection conn, int idPrestamo, int idLibro) throws SQLException {
 
-        // ── 1. Actualizar estado del préstamo a 'Devuelto' ──────────────────
+        // 1. Actualizar estado del préstamo a 'Devuelto'
         String sqlEstado = "UPDATE prestamos SET estado = 'Devuelto' WHERE id_prestamo = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sqlEstado)) {
@@ -182,7 +177,7 @@ public class PrestamoBean {
             ps.executeUpdate();
         }
 
-        // ── 2. Incrementar la cantidad disponible del libro ──────────────────
+        // 2. Incrementar la cantidad disponible del libro
         String sqlStock = "UPDATE libros SET cantidad_disponible = cantidad_disponible + 1 " +
                 "WHERE id_libro = ?";
 
@@ -192,14 +187,14 @@ public class PrestamoBean {
         }
     }
 
-    /**
-     * Retorna todos los préstamos con los datos completos del estudiante y libro,
-     * usando JOINs para poblar los objetos relacionados.
-     *
-     * @param conn Conexión JDBC activa
-     * @return Lista de objetos PrestamoBean completamente poblados
-     * @throws SQLException si ocurre un error al consultar
+    /*
+     Retorna todos los préstamos con los datos completos del estudiante y libro,
+     usando JOINs para poblar los objetos relacionados.
+     @param conn Conexión JDBC activa
+     @return Lista de objetos PrestamoBean completamente poblados
+     @throws SQLException si ocurre un error al consultar
      */
+    // Obtiene la lista de préstamos para mostrarla en listaPrestamos.jsp
     public List<PrestamoBean> getListaPrestamos(Connection conn) throws SQLException {
         List<PrestamoBean> lista = new ArrayList<>();
 
