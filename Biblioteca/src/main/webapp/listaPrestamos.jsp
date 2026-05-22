@@ -46,6 +46,7 @@
     <% } %>
 
     <%
+        // Obtener todos los préstamos con datos completos de estudiante y libro.
         PrestamoBean prestamoBean = new PrestamoBean();
         List<PrestamoBean> lista = prestamoBean.getListaPrestamos(conn);
     %>
@@ -81,6 +82,7 @@
                     <td><%= p.getFechaDevolucion() %></td>
                     <td><span class="badge-udb <%= badgeClass %>"><%= estadoVisual %></span></td>
                     <td>
+                        <%-- Mostrar acción según si el préstamo está activo o ya fue devuelto. --%>
                         <% if (!estadoVisual.equals("Devuelto")) { %>
                             <a href="controllerDevolucion.jsp?idPrestamo=<%= p.getIdPrestamo() %>&idLibro=<%= p.getIdLibro() %>"
                                class="btn-udb-danger"

@@ -4,7 +4,7 @@
 <%@ page import="udb.biblioteca.LibroBean" %>
 <%@ include file="conexion.jsp" %>
 <%-- Página para registrar nuevos préstamos. --%>
-<%-- Carga estudiantes y libros desde la base de datos y valida disponibilidad del libro. --%>
+<%-- Carga estudiantes y libros disponibles desde la base de datos y valida stock antes de guardar. --%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,6 +48,7 @@
                 <select name="idEstudiante" class="form-select" required>
                     <option value="">— Seleccione un estudiante —</option>
                     <%
+                        // Cargar la lista de estudiantes para el select de préstamos.
                         EstudianteBean estBean = new EstudianteBean();
                         List<EstudianteBean> estudiantes = estBean.getListaEstudiantes(conn);
                         for (EstudianteBean e : estudiantes) {
@@ -66,6 +67,7 @@
                 <select name="idLibro" class="form-select" required>
                     <option value="">— Seleccione un libro —</option>
                     <%
+                        // Cargar libros e indicar cuáles no tienen stock disponible.
                         LibroBean libBean = new LibroBean();
                         List<LibroBean> libros = libBean.getListaLibros(conn);
                         for (LibroBean l : libros) {

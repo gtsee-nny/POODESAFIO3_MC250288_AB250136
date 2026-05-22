@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JavaBean que representa la tabla libros.
- * Incluye el vínculo con la categoría y métodos para listar e insertar libros.
+ * JavaBean para la tabla libros.
+ * Representa un libro con relación a su categoría y ofrece métodos CRUD.
  */
 public class LibroBean {
 
@@ -87,15 +87,13 @@ public class LibroBean {
         return "";
     }
 
-    /*
-      Retorna todos los libros almacenados en la base de datos,
-      incluyendo el nombre de su categoría mediante un JOIN.
-      @param conn Conexión JDBC activa
-      @return Lista de objetos LibroBean
-      @throws SQLException si ocurre un error al consultar la base de datos
+    /**
+     * Retorna todos los libros almacenados en la base de datos,
+     * incluyendo el nombre de su categoría mediante un JOIN.
+     * @param conn Conexión JDBC activa
+     * @return Lista de objetos LibroBean
+     * @throws SQLException si ocurre un error al consultar la base de datos
      */
-
-    // Obtiene todos los libros guardados para mostrarlos en la página
     public List<LibroBean> getListaLibros(Connection conn) throws SQLException {
         List<LibroBean> lista = new ArrayList<>();
 
@@ -130,13 +128,11 @@ public class LibroBean {
         return lista;
     }
 
-    /*
-      Inserta un nuevo libro en la base de datos.
-      @param conn Conexión JDBC activa
-      @throws SQLException si ocurre un error al insertar
+    /**
+     * Inserta un nuevo libro en la base de datos.
+     * @param conn Conexión JDBC activa
+     * @throws SQLException si ocurre un error al insertar
      */
-
-    // Inserta un libro nuevo en la base de datos
     public void insertar(Connection conn) throws SQLException {
         String sql = "INSERT INTO libros (titulo, autor, isbn, id_categoria, cantidad_disponible) " +
                 "VALUES (?, ?, ?, ?, ?)";

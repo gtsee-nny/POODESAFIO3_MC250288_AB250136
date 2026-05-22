@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JavaBean que representa la tabla estudiantes.
- * Proporciona métodos para listar, insertar y eliminar estudiantes.
+ * JavaBean para la tabla estudiantes.
+ * Proporciona métodos para listar, insertar, actualizar y eliminar estudiantes.
  */
 public class EstudianteBean {
 
@@ -56,14 +56,12 @@ public class EstudianteBean {
 
     // Métodos de lógica de negocio
 
-    /*
-      Retorna todos los estudiantes registrados en la base de datos.
-      @param conn Conexión JDBC activa
-      @return Lista de objetos EstudianteBean
-      @throws SQLException si ocurre un error al consultar
+    /**
+     * Retorna todos los estudiantes registrados en la base de datos.
+     * @param conn Conexión JDBC activa
+     * @return Lista de objetos EstudianteBean
+     * @throws SQLException si ocurre un error al consultar
      */
-
-    // Obtiene la lista de estudiantes para mostrarla en formularios o tablas
     public List<EstudianteBean> getListaEstudiantes(Connection conn) throws SQLException {
         List<EstudianteBean> lista = new ArrayList<>();
 
@@ -86,13 +84,11 @@ public class EstudianteBean {
         return lista;
     }
 
-    /*
-     Inserta un nuevo estudiante en la base de datos.
-     @param conn Conexión JDBC activa
-     @throws SQLException si ocurre un error al insertar
+    /**
+     * Inserta un nuevo estudiante en la base de datos.
+     * @param conn Conexión JDBC activa
+     * @throws SQLException si ocurre un error al insertar
      */
-
-    // Inserta un estudiante nuevo en la base de datos
     public void insertar(Connection conn) throws SQLException {
         String sql = "INSERT INTO estudiantes (carnet, nombre_estudiante, carrera, telefono) " +
                 "VALUES (?, ?, ?, ?)";

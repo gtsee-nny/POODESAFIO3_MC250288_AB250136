@@ -3,8 +3,8 @@
 <%@ page import="udb.biblioteca.CategoriaBean" %>
 <%@ page import="udb.biblioteca.LibroBean" %>
 <%@ include file="conexion.jsp" %>
-<%-- Página para registrar libros en el catálogo. --%>
-<%-- Incluye un formulario de libro y un panel para crear/eliminar categorías, además de lista editable de libros. --%>
+<%-- Página de registro de libros en el catálogo. --%>
+<%-- Carga categorías y libros desde la base de datos, permite crear/eliminar categorías y editar/eliminar libros existentes. --%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,6 +37,8 @@
     <hr class="section-divider">
 
     <%
+        // Cargar categorías y libros desde la base de datos.
+        // Si llega idLibro, obtener los datos para editar ese libro.
         CategoriaBean catBean = new CategoriaBean();
         List<CategoriaBean> categorias = catBean.getListaCategorias(conn);
         List<LibroBean> libros = new LibroBean().getListaLibros(conn);

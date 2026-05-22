@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JavaBean que representa la tabla categorias.
- * Contiene atributos simples y métodos para consultar e insertar categorías.
+ * JavaBean para la tabla categorias.
+ * Permite listar, insertar y eliminar categorías con validación de duplicados.
  */
 public class CategoriaBean {
 
@@ -35,14 +35,12 @@ public class CategoriaBean {
 
     //  Métodos de lógica de negocio
 
-    /*
-      Retorna todas las categorías almacenadas en la base de datos.
-      @param conn Conexión JDBC activa (obtenida desde conexion.jsp)
-      @return Lista de objetos CategoriaBean
-      @throws SQLException si ocurre un error al consultar la base de datos
+    /**
+     * Retorna todas las categorías almacenadas en la base de datos.
+     * @param conn Conexión JDBC activa
+     * @return Lista de objetos CategoriaBean
+     * @throws SQLException si ocurre un error al consultar la base de datos
      */
-
-    // Este metodoo obtiene todas las categorías de la BD y las manda a donde se necesiten mostrar
     public List<CategoriaBean> getListaCategorias(Connection conn) throws SQLException {
         List<CategoriaBean> lista = new ArrayList<>();
 
@@ -74,13 +72,11 @@ public class CategoriaBean {
         return false;
     }
 
-    /*
-     Inserta una nueva categoría en la base de datos.
-     @param conn Conexión JDBC activa
-     @throws SQLException si ocurre un error al insertar
+    /**
+     * Inserta una nueva categoría en la base de datos.
+     * @param conn Conexión JDBC activa
+     * @throws SQLException si ocurre un error al insertar
      */
-
-    // Este metodoo inserta una nueva categoría en la base de datos
     public void insertar(Connection conn) throws SQLException {
         if (this.getNombreCategoria() == null || this.getNombreCategoria().trim().isEmpty()) {
             throw new SQLException("El nombre de categoría no puede estar vacío.");

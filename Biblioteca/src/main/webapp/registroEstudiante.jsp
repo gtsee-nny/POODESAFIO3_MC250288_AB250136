@@ -2,8 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="udb.biblioteca.EstudianteBean" %>
 <%@ include file="conexion.jsp" %>
-<%-- Página para registrar y eliminar estudiantes. --%>
-<%-- Muestra formulario de registro y un panel/modal de eliminación con confirmación. --%>
+<%-- Página de registro y gestión de estudiantes. --%>
+<%-- Carga estudiantes desde la base de datos, permite registrar/editar y eliminar con confirmación cuando sea necesario. --%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -36,6 +36,7 @@
     <hr class="section-divider">
 
     <%
+        // Preparar datos para el formulario: cargar estudiante para edición si existe idEstudiante.
         EstudianteBean estudianteEdit = new EstudianteBean();
         boolean editingEstudiante = false;
         String estudianteIdParam = request.getParameter("idEstudiante");
@@ -59,15 +60,6 @@
             — <strong><%= request.getParameter("studentName") %></strong>
         <% } %>
     </div>
-    <script>
-        // Cerrar paneles de eliminación si hay éxito
-        document.addEventListener('DOMContentLoaded', function(){
-            const deleteCard = document.getElementById('deleteCard');
-            const confirmCard = document.getElementById('confirmDeleteCard');
-            if (deleteCard) deleteCard.classList.remove('active');
-            if (confirmCard) confirmCard.classList.remove('active');
-        });
-    </script>
     <% } %>
     <% if (request.getParameter("delWarning") != null) { %>
     <div class="alert-danger-udb mb-3">⚠️ <%= request.getParameter("delWarning") %></div>
@@ -148,33 +140,8 @@
         </div>
     </div>
 
-    <%-- Panel de eliminación que muestra la lista de estudiantes y permite iniciar el flujo de borrado. --%>
-    <div class="category-card" id="deleteCard" data-open="<%= request.getParameter("delOpen") != null ? "true" : "false" %>">
-        <h4>Eliminar estudiante</h4>
-        <p class="subtitle">Selecciona el estudiante que deseas eliminar.</p>
-        <form action="controllerEliminarEstudiante.jsp" method="POST">
-            <div class="mb-3">
-                <label class="form-label">Estudiante</label>
-                <select name="idEstudiante" class="form-select" required>
-                    <option value="">— Seleccione un estudiante —</option>
-                    <%
-                        for (EstudianteBean e : estudiantes) {
-                    %>
-                    <option value="<%= e.getIdEstudiante() %>"><%= e.getCarnet() %> — <%= e.getNombreEstudiante() %></option>
-                    <%
-                        }
-                    %>
-                </select>
-            </div>
-            <div class="d-flex gap-btn">
-                <button type="submit" class="btn-udb-danger">Eliminar estudiante</button>
-                <button type="button" class="btn-udb-secondary" onclick="toggleDeleteCard()">Cerrar</button>
-            </div>
-        </form>
-    </div>
-
     <% if (request.getParameter("idToConfirm") != null) { %>
-    <!-- Modal de confirmación (aparece cuando controller devuelve idToConfirm) -->
+    <!-- Modal de confirmación para eliminación de estudiantes con préstamos pendientes -->
     <div id="confirmModalOverlay" style="position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1200;">
         <div class="form-card" style="max-width:640px;padding:1.5rem;">
             <h4>Confirmar eliminación</h4>

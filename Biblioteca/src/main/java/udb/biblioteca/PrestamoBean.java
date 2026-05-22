@@ -109,17 +109,13 @@ public class PrestamoBean {
         return devolucion.isBefore(hoy) ? "Vencido" : "Vigente";
     }
 
-    /*
-      Registra un nuevo préstamo en la base de datos.
-      Antes de insertar verifica que el libro tenga unidades disponibles;
-      si no las tiene lanza una excepción para evitar el préstamo.
-      Al insertar, descuenta una unidad del stock del libro.
-      @param conn Conexión JDBC activa
-      @throws SQLException   si ocurre un error de base de datos
-      @throws Exception      si el libro no tiene unidades disponibles
+    /**
+     * Registra un nuevo préstamo en la base de datos.
+     * Verifica disponibilidad del libro antes de insertar y descuenta stock.
+     * @param conn Conexión JDBC activa
+     * @throws SQLException si ocurre un error de base de datos
+     * @throws Exception si el libro no tiene unidades disponibles
      */
-
-    // Este metodoo guarda un nuevo préstamo y lo manda a la tabla prestamos
     public void insertar(Connection conn) throws Exception {
 
         // 1. Verificar disponibilidad del libro
@@ -190,19 +186,12 @@ public class PrestamoBean {
         }
     }
 
-    /*
-     Retorna todos los préstamos con los datos completos del estudiante y libro,
-     usando JOINs para poblar los objetos relacionados.
-     @param conn Conexión JDBC activa
-     @return Lista de objetos PrestamoBean completamente poblados
-     @throws SQLException si ocurre un error al consultar
-     */
-    /*
-     Elimina un préstamo de la base de datos por su idPrestamo.
-     Si el préstamo estaba Activo, devuelve la unidad al stock del libro.
-     @param conn Conexión JDBC activa
-     @throws SQLException si ocurre un error de base de datos
-     @throws Exception    si no se indicó un idPrestamo válido
+    /**
+     * Elimina un préstamo de la base de datos por su idPrestamo.
+     * Si el préstamo estaba activo, devuelve la unidad al stock del libro.
+     * @param conn Conexión JDBC activa
+     * @throws SQLException si ocurre un error de base de datos
+     * @throws Exception si no se indicó un idPrestamo válido
      */
     public void eliminar(Connection conn) throws Exception {
         if (this.idPrestamo <= 0) {
@@ -249,7 +238,13 @@ public class PrestamoBean {
         }
     }
 
-    // Obtiene la lista de préstamos para mostrarla en listaPrestamos.jsp
+    /**
+     * Obtiene la lista de préstamos para mostrarla en listaPrestamos.jsp.
+     * Incluye datos del estudiante y del libro relacionados.
+     * @param conn Conexión JDBC activa
+     * @return Lista de objetos PrestamoBean
+     * @throws SQLException si ocurre un error al consultar
+     */
     public List<PrestamoBean> getListaPrestamos(Connection conn) throws SQLException {
         List<PrestamoBean> lista = new ArrayList<>();
 
