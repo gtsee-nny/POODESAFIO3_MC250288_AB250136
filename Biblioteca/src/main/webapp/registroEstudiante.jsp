@@ -110,13 +110,9 @@
             </div>
 
         </form>
-
-        <div class="mt-4">
-            <button type="button" class="btn-udb-danger" id="toggleDeleteCard">¿Eliminar Estudiante? ⚠️</button>
-        </div>
     </div>
 
-    <div class="category-card mt-4">
+    <div class="section-card mt-4">
         <h4>Lista de estudiantes</h4>
         <p class="subtitle">Edita o elimina un estudiante registrado.</p>
         <div class="table-wrapper">
@@ -201,31 +197,14 @@
     </div>
 
     <script>
-        // Al mostrar modal, desactivar scroll y cerrar otros paneles
         document.addEventListener('DOMContentLoaded', function(){
             const overlay = document.getElementById('confirmModalOverlay');
-            const deleteCard = document.getElementById('deleteCard');
-            if (deleteCard) deleteCard.classList.remove('active');
             if (overlay) {
                 document.body.style.overflow = 'hidden';
             }
         });
     </script>
     <% } %>
-
-    <script>
-        const deleteCard = document.getElementById('deleteCard');
-        const toggleDeleteButton = document.getElementById('toggleDeleteCard');
-
-        function toggleDeleteCard() {
-            if (!deleteCard) return;
-            deleteCard.classList.toggle('active');
-            if (deleteCard.classList.contains('active')) deleteCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        if (deleteCard && deleteCard.dataset.open === 'true') deleteCard.classList.add('active');
-        if (toggleDeleteButton) toggleDeleteButton.addEventListener('click', toggleDeleteCard);
-    </script>
 
 </div>
 

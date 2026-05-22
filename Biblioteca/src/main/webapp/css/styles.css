@@ -39,7 +39,7 @@ body {
 }
 
 .container {
-    max-width: 1120px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -131,6 +131,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     min-height: 280px;
+    height: 100%;
 }
 
 .udb-card::before {
@@ -268,7 +269,7 @@ body {
     border-radius: var(--radius-card);
     padding: 2.25rem 2.5rem;
     box-shadow: var(--shadow-card);
-    max-width: 760px;
+    max-width: 980px;
     width: 100%;
     margin: 0 auto;
 }
@@ -286,6 +287,18 @@ body {
 }
 
 .category-card.active {
+    display: block;
+}
+
+.section-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-card);
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow-card);
+    max-width: 980px;
+    width: 100%;
+    margin: 1.5rem auto 0;
     display: block;
 }
 

@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <div class="category-card mt-4">
+    <div class="section-card mt-4">
         <h4>Catálogo de libros</h4>
         <p class="subtitle">Edite o elimine rápidamente un registro de libro existente.</p>
         <div class="table-wrapper">
@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <div class="category-card mt-4">
+    <div class="section-card mt-4">
         <h4>Gestión de categorías</h4>
         <p class="subtitle">Elimine categorías que no estén asociadas a ningún libro.</p>
         <div class="table-wrapper">
