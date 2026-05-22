@@ -1,11 +1,13 @@
 package udb.biblioteca;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * JavaBean que representa la tabla categorias.
+ * Contiene atributos simples y métodos para consultar e insertar categorías.
+ */
 public class CategoriaBean {
 
     private int    idCategoria;
@@ -59,6 +61,19 @@ public class CategoriaBean {
         return lista;
     }
 
+    private boolean existeCategoria(Connection conn) throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM categorias WHERE LOWER(TRIM(nombre_categoria)) = LOWER(TRIM(?))";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, this.getNombreCategoria());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total") > 0;
+                }
+            }
+        }
+        return false;
+    }
+
     /*
      Inserta una nueva categoría en la base de datos.
      @param conn Conexión JDBC activa
@@ -67,13 +82,44 @@ public class CategoriaBean {
 
     // Este metodoo inserta una nueva categoría en la base de datos
     public void insertar(Connection conn) throws SQLException {
+        if (this.getNombreCategoria() == null || this.getNombreCategoria().trim().isEmpty()) {
+            throw new SQLException("El nombre de categoría no puede estar vacío.");
+        }
+
+        if (existeCategoria(conn)) {
+            throw new SQLException("La categoría ya existe.");
+        }
+
         String sql = "INSERT INTO categorias (nombre_categoria) VALUES (?)";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, this.getNombreCategoria());
+            ps.setString(1, this.getNombreCategoria().trim());
             ps.executeUpdate();
         }
     }
 
+    /**
+     * Elimina una categoría si no tiene libros asociados.
+     */
+    public void eliminar(Connection conn) throws SQLException {
+        String sqlCheck = "SELECT COUNT(*) AS total FROM libros WHERE id_categoria = ?";
+        try (PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
+            psCheck.setInt(1, this.idCategoria);
+            try (ResultSet rs = psCheck.executeQuery()) {
+                if (rs.next() && rs.getInt("total") > 0) {
+                    throw new SQLException("No se puede eliminar la categoría porque tiene libros asociados.");
+                }
+            }
+        }
+
+        String sqlDelete = "DELETE FROM categorias WHERE id_categoria = ?";
+        try (PreparedStatement psDelete = conn.prepareStatement(sqlDelete)) {
+            psDelete.setInt(1, this.idCategoria);
+            int deleted = psDelete.executeUpdate();
+            if (deleted == 0) {
+                throw new SQLException("Categoría no encontrada.");
+            }
+        }
+    }
 
 }

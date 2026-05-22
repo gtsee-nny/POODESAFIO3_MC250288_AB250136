@@ -1,4 +1,5 @@
-<%-- Aquí se procesa la devolución de libros prestados --%>
+<%-- Controlador para procesar la devolución de un préstamo. --%>
+<%-- Actualiza el estado del préstamo y retorna el stock del libro. --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 <%@ page import="udb.biblioteca.PrestamoBean" %>

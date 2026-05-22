@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * JavaBean que representa la tabla prestamos.
+ * Contiene lógica para crear préstamos, devolver libros y calcular estados.
+ */
 public class PrestamoBean {
 
     private int            idPrestamo;
@@ -194,6 +197,58 @@ public class PrestamoBean {
      @return Lista de objetos PrestamoBean completamente poblados
      @throws SQLException si ocurre un error al consultar
      */
+    /*
+     Elimina un préstamo de la base de datos por su idPrestamo.
+     Si el préstamo estaba Activo, devuelve la unidad al stock del libro.
+     @param conn Conexión JDBC activa
+     @throws SQLException si ocurre un error de base de datos
+     @throws Exception    si no se indicó un idPrestamo válido
+     */
+    public void eliminar(Connection conn) throws Exception {
+        if (this.idPrestamo <= 0) {
+            throw new Exception("No se indicó el préstamo a eliminar.");
+        }
+
+        // 1. Verificar si el préstamo estaba Activo para ajustar el stock
+        String sqlEstado = "SELECT estado, id_libro FROM prestamos WHERE id_prestamo = ?";
+        String estadoActual = null;
+        int libroDelPrestamo = 0;
+
+        try (PreparedStatement ps = conn.prepareStatement(sqlEstado)) {
+            ps.setInt(1, this.idPrestamo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    estadoActual   = rs.getString("estado");
+                    libroDelPrestamo = rs.getInt("id_libro");
+                }
+            }
+        }
+
+        if (estadoActual == null) {
+            throw new Exception("No se encontró el préstamo a eliminar.");
+        }
+
+        // 2. Si estaba Activo, restaurar una unidad al libro
+        if ("Activo".equalsIgnoreCase(estadoActual)) {
+            String sqlStock = "UPDATE libros SET cantidad_disponible = cantidad_disponible + 1 " +
+                    "WHERE id_libro = ?";
+            try (PreparedStatement psStock = conn.prepareStatement(sqlStock)) {
+                psStock.setInt(1, libroDelPrestamo);
+                psStock.executeUpdate();
+            }
+        }
+
+        // 3. Eliminar el préstamo
+        String sqlDelete = "DELETE FROM prestamos WHERE id_prestamo = ?";
+        try (PreparedStatement psDel = conn.prepareStatement(sqlDelete)) {
+            psDel.setInt(1, this.idPrestamo);
+            int rows = psDel.executeUpdate();
+            if (rows == 0) {
+                throw new Exception("No se pudo eliminar el préstamo.");
+            }
+        }
+    }
+
     // Obtiene la lista de préstamos para mostrarla en listaPrestamos.jsp
     public List<PrestamoBean> getListaPrestamos(Connection conn) throws SQLException {
         List<PrestamoBean> lista = new ArrayList<>();

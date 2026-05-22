@@ -1,4 +1,5 @@
-<%-- Esta página crea la conexión con la base de datos para que los demás JSP la puedan usar --%>
+<%-- Archivo de conexión JDBC compartido. --%>
+<%-- Crea la variable `conn` que los JSP incluyen para ejecutar consultas y actualizaciones. --%>
 <%@ page import="java.sql.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%

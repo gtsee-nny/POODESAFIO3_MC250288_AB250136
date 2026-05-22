@@ -1,4 +1,5 @@
-<%-- Controlador encargado de recibir datos del formulario de libros y guardarlos --%>
+<%-- Controlador JSP que recibe el formulario de registro de libros y guarda el libro en la base de datos. --%>
+<%-- Usa `jsp:useBean` y `jsp:setProperty` para poblar el bean con los datos del formulario. --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 
@@ -7,12 +8,24 @@
 <jsp:setProperty name="libro" property="*"/>
 
 <%
-    // Insertar el libro en la base de datos usando el bean
+    String action = request.getParameter("action");
+    String successMessage = "";
     try {
-        libro.insertar(conn);
+        if ("delete".equals(action)) {
+            if (libro.getIdLibro() == 0) {
+                throw new Exception("No se indicó el libro a eliminar.");
+            }
+            libro.eliminar(conn);
+            successMessage = "Libro eliminado correctamente.";
+        } else if (libro.getIdLibro() > 0) {
+            libro.actualizar(conn);
+            successMessage = "Libro actualizado correctamente.";
+        } else {
+            libro.insertar(conn);
+            successMessage = "Libro registrado exitosamente.";
+        }
     } catch (Exception e) {
-        // Si hay error (ej: ISBN duplicado) redirigir con mensaje
-        response.sendRedirect("registroLibro.jsp?error=" + e.getMessage());
+        response.sendRedirect("registroLibro.jsp?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
         return;
     }
 %>
@@ -24,10 +37,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Libro Registrado</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="index.jsp">Biblioteca UDB</a>
         <div class="navbar-nav ms-auto">
@@ -39,27 +53,31 @@
     </div>
 </nav>
 
-<div class="container mt-4">
-    <div class="alert alert-success">✅ Libro registrado exitosamente.</div>
+<div class="container mt-page">
+    <div class="form-card">
+        <div class="alert-success-udb mb-3">✅ <%= successMessage %></div>
 
-    <h5>Datos registrados:</h5>
-    <ul class="list-group mb-3">
-        <li class="list-group-item"><strong>Título:</strong>
-            <jsp:getProperty name="libro" property="titulo"/>
-        </li>
-        <li class="list-group-item"><strong>Autor:</strong>
-            <jsp:getProperty name="libro" property="autor"/>
-        </li>
-        <li class="list-group-item"><strong>ISBN:</strong>
-            <jsp:getProperty name="libro" property="isbn"/>
-        </li>
-        <li class="list-group-item"><strong>Cantidad disponible:</strong>
-            <jsp:getProperty name="libro" property="cantidadDisponible"/>
-        </li>
-    </ul>
+        <h5>Datos registrados:</h5>
+        <div class="detail-card mb-3">
+            <div class="detail-item"><strong>Título:</strong>
+                <span><jsp:getProperty name="libro" property="titulo"/></span>
+            </div>
+            <div class="detail-item"><strong>Autor:</strong>
+                <span><jsp:getProperty name="libro" property="autor"/></span>
+            </div>
+            <div class="detail-item"><strong>ISBN:</strong>
+                <span><jsp:getProperty name="libro" property="isbn"/></span>
+            </div>
+            <div class="detail-item"><strong>Cantidad disponible:</strong>
+                <span><jsp:getProperty name="libro" property="cantidadDisponible"/></span>
+            </div>
+        </div>
 
-    <a href="registroLibro.jsp" class="btn btn-dark">Registrar otro</a>
-    <a href="index.jsp" class="btn btn-secondary ms-2">Inicio</a>
+        <div class="d-flex gap-btn">
+            <a href="registroLibro.jsp" class="btn-submit">Registrar otro</a>
+            <a href="index.jsp" class="btn-udb-secondary ms-2">Inicio</a>
+        </div>
+    </div>
 </div>
 
 </body>

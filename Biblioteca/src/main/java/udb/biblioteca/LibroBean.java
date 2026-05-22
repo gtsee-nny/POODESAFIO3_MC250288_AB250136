@@ -4,6 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JavaBean que representa la tabla libros.
+ * Incluye el vínculo con la categoría y métodos para listar e insertar libros.
+ */
 public class LibroBean {
 
     private int          idLibro;
@@ -145,5 +149,71 @@ public class LibroBean {
             ps.setInt(5, this.cantidadDisponible);
             ps.executeUpdate();
         }
+    }
+
+    /**
+     * Actualiza los datos de un libro existente.
+     */
+    public void actualizar(Connection conn) throws SQLException {
+        String sql = "UPDATE libros SET titulo = ?, autor = ?, isbn = ?, id_categoria = ?, cantidad_disponible = ? " +
+                "WHERE id_libro = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, this.titulo);
+            ps.setString(2, this.autor);
+            ps.setString(3, this.isbn);
+            ps.setInt(4, this.idCategoria);
+            ps.setInt(5, this.cantidadDisponible);
+            ps.setInt(6, this.idLibro);
+            ps.executeUpdate();
+        }
+    }
+
+    /**
+     * Elimina el libro y sus préstamos asociados de la base de datos.
+     */
+    public void eliminar(Connection conn) throws SQLException {
+        String sqlDeletePrestamos = "DELETE FROM prestamos WHERE id_libro = ?";
+        try (PreparedStatement psPrestamos = conn.prepareStatement(sqlDeletePrestamos)) {
+            psPrestamos.setInt(1, this.idLibro);
+            psPrestamos.executeUpdate();
+        }
+
+        String sqlDeleteLibro = "DELETE FROM libros WHERE id_libro = ?";
+        try (PreparedStatement psLibro = conn.prepareStatement(sqlDeleteLibro)) {
+            psLibro.setInt(1, this.idLibro);
+            int updated = psLibro.executeUpdate();
+            if (updated == 0) {
+                throw new SQLException("No se encontró el libro a eliminar.");
+            }
+        }
+    }
+
+    /**
+     * Recupera un libro por su ID para cargarlo en el formulario de edición.
+     */
+    public LibroBean getLibroPorId(Connection conn, int idLibro) throws SQLException {
+        String sql = "SELECT l.id_libro, l.titulo, l.autor, l.isbn, l.id_categoria, l.cantidad_disponible, c.nombre_categoria " +
+                "FROM libros l LEFT JOIN categorias c ON l.id_categoria = c.id_categoria WHERE l.id_libro = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idLibro);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    LibroBean libro = new LibroBean();
+                    libro.setIdLibro(rs.getInt("id_libro"));
+                    libro.setTitulo(rs.getString("titulo"));
+                    libro.setAutor(rs.getString("autor"));
+                    libro.setIsbn(rs.getString("isbn"));
+                    libro.setIdCategoria(rs.getInt("id_categoria"));
+                    libro.setCantidadDisponible(rs.getInt("cantidad_disponible"));
+
+                    CategoriaBean cat = new CategoriaBean();
+                    cat.setIdCategoria(rs.getInt("id_categoria"));
+                    cat.setNombreCategoria(rs.getString("nombre_categoria"));
+                    libro.setCategoria(cat);
+                    return libro;
+                }
+            }
+        }
+        return new LibroBean();
     }
 }

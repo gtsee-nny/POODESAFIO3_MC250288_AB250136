@@ -1,4 +1,5 @@
-<%-- Este controlador recibe los datos del préstamo y los manda al Bean para guardarlos --%>
+<%-- Controlador JSP que procesa el registro y eliminación de préstamos. --%>
+<%-- Inserta nuevos préstamos y permite borrar registros devueltos. --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="conexion.jsp" %>
 
@@ -7,12 +8,25 @@
 <jsp:setProperty name="prestamo" property="*"/>
 
 <%
-    // Insertar el préstamo — el bean valida disponibilidad internamente
+    String action = request.getParameter("action");
     try {
+        if ("delete".equals(action)) {
+            if (prestamo.getIdPrestamo() == 0) {
+                throw new Exception("No se indicó el préstamo a eliminar.");
+            }
+            prestamo.eliminar(conn);
+            response.sendRedirect("listaPrestamos.jsp?deleted=true");
+            return;
+        }
+
+        // Insertar el préstamo — el bean valida disponibilidad internamente
         prestamo.insertar(conn);
     } catch (Exception e) {
-        // Si no hay disponibilidad u otro error, redirigir con mensaje
-        response.sendRedirect("registroPrestamo.jsp?error=" + e.getMessage());
+        if ("delete".equals(action)) {
+            response.sendRedirect("listaPrestamos.jsp?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
+        } else {
+            response.sendRedirect("registroPrestamo.jsp?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
+        }
         return;
     }
 %>
@@ -24,10 +38,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Préstamo Registrado</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="index.jsp">Biblioteca UDB</a>
         <div class="navbar-nav ms-auto">
@@ -39,24 +54,28 @@
     </div>
 </nav>
 
-<div class="container mt-4">
-    <div class="alert alert-success">✅ Préstamo registrado exitosamente.</div>
+<div class="container mt-page">
+    <div class="form-card">
+        <div class="alert-success-udb mb-3">✅ Préstamo registrado exitosamente.</div>
 
-    <h5>Datos registrados:</h5>
-    <ul class="list-group mb-3">
-        <li class="list-group-item"><strong>Fecha de préstamo:</strong>
-            <jsp:getProperty name="prestamo" property="fechaPrestamo"/>
-        </li>
-        <li class="list-group-item"><strong>Fecha de devolución:</strong>
-            <jsp:getProperty name="prestamo" property="fechaDevolucion"/>
-        </li>
-        <li class="list-group-item"><strong>Estado:</strong>
-            <jsp:getProperty name="prestamo" property="estado"/>
-        </li>
-    </ul>
+        <h5>Datos registrados:</h5>
+        <div class="detail-card mb-3">
+            <div class="detail-item"><strong>Fecha de préstamo:</strong>
+                <span><jsp:getProperty name="prestamo" property="fechaPrestamo"/></span>
+            </div>
+            <div class="detail-item"><strong>Fecha de devolución:</strong>
+                <span><jsp:getProperty name="prestamo" property="fechaDevolucion"/></span>
+            </div>
+            <div class="detail-item"><strong>Estado:</strong>
+                <span><jsp:getProperty name="prestamo" property="estado"/></span>
+            </div>
+        </div>
 
-    <a href="registroPrestamo.jsp" class="btn btn-dark">Registrar otro</a>
-    <a href="listaPrestamos.jsp" class="btn btn-secondary ms-2">Ver préstamos</a>
+        <div class="d-flex gap-btn">
+            <a href="registroPrestamo.jsp" class="btn-submit">Registrar otro</a>
+            <a href="listaPrestamos.jsp" class="btn-udb-secondary ms-2">Ver préstamos</a>
+        </div>
+    </div>
 </div>
 
 </body>
